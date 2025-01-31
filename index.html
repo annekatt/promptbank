@@ -52,13 +52,9 @@
 <body>
     <div class="container">
         <h1>Prompt-bank</h1>
+        <p>En samling av inspirerende prompts for skriving og refleksjon.</p>
         <input type="text" id="search" placeholder="Søk etter en prompt..." onkeyup="filterPrompts()">
         <ul id="promptList">
-            <li>Hvordan kan AI hjelpe med å forbedre skriveferdigheter?</li>
-            <li>Beskriv en fremtid hvor alle bruker AI daglig.</li>
-            <li>Skriv en kreativ historie om en AI-robot med følelser.</li>
-            <li>Hvordan kan AI påvirke utdanningssystemet?</li>
-            <li>Lag en prompt for å skrive en filosofisk tekst.</li>
         </ul>
     </div>
 
@@ -75,6 +71,23 @@
     </div>
 
     <script>
+        async function loadPrompts() {
+            try {
+                let response = await fetch('prompts.txt');
+                let text = await response.text();
+                let prompts = text.split('\n').filter(line => line.trim() !== '');
+                
+                let promptList = document.getElementById("promptList");
+                prompts.forEach(prompt => {
+                    let li = document.createElement("li");
+                    li.textContent = prompt;
+                    promptList.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Kunne ikke laste inn prompts:", error);
+            }
+        }
+        
         function filterPrompts() {
             let input = document.getElementById("search").value.toLowerCase();
             let prompts = document.getElementById("promptList").getElementsByTagName("li");
@@ -84,6 +97,8 @@
                 prompts[i].style.display = text.toLowerCase().includes(input) ? "" : "none";
             }
         }
+
+        document.addEventListener("DOMContentLoaded", loadPrompts);
     </script>
 </body>
 </html>
